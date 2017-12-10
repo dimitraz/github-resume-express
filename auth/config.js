@@ -2,7 +2,6 @@ var passport = require('passport');
 var GithubStrategy = require('passport-github2').Strategy;
 var User = require('../models/user');
 
-console.log(process.env);
 module.exports = function (passport) {
     passport.use(new GithubStrategy({
         clientID: process.env.CLIENT_ID,
@@ -15,7 +14,7 @@ module.exports = function (passport) {
             User.findOne({ github_id: profile.id }, function (err, user) {
                 if (err) { console.log(err); }
                 if (!err && user !== null) {
-                    done(null, user);
+                    return done(null, user);
                 } else {
                     profile = JSON.parse(profile._raw);
                     user = new User({
@@ -34,7 +33,7 @@ module.exports = function (passport) {
                             console.log(err);
                         } else {
                             console.log("saving user ...");
-                            done(null, user);
+                            return done(null, user);
                         }
                     });
                 }

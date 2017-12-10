@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var passport = require('passport');
+var cors = require('cors')
 require('dotenv').config()
 require('./auth/config')(passport)
 
@@ -16,6 +17,7 @@ var auth = require('./auth/index');
 var User = require('./models/user');
 
 var app = express();
+app.use(cors())
 
 // db connection
 var mongoose = require('mongoose');
@@ -27,6 +29,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser(function (user, done) {
+  console.log(user);
   done(null, user._id);
 });
 
@@ -49,6 +52,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.all('/', function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 
 app.use('/', index);
 app.use('/api/users', users);

@@ -1,20 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var Project = require('../models/project');
+var authorise = require('../auth/authorise');
 
 // handle errors
 function handleError(res, err) {
     return res.status(500).json(err);
-}
-
-// simple middleware for authenticated routes
-function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-
-    // denied, redirect to login
-    return res.status(403).json({ message: "Unauthorised action" });
 }
 
 // Get a list of projects
@@ -45,7 +36,7 @@ router.get('/:id', function (req, res) {
 });
 
 // Create a new project
-router.post('/', ensureAuthenticated, function (req, res) {
+router.post('/', authorise, function (req, res) {
     Project.create(req.body, function (err, project) {
         if (err) {
             return handleError(res, { error: 'Error creating project: ' + err });
@@ -56,7 +47,7 @@ router.post('/', ensureAuthenticated, function (req, res) {
 });
 
 // Update an existing project
-router.patch('/:id', ensureAuthenticated, function (req, res) {
+router.patch('/:id', authorise, function (req, res) {
     Project.findById(req.params.id, function (err, project) {
         if (err) {
             return handleError(res, { error: 'Error fetching project: ' + err });
@@ -79,7 +70,7 @@ router.patch('/:id', ensureAuthenticated, function (req, res) {
 });
 
 // Partially update an existing project
-router.patch('/:id', ensureAuthenticated, function (req, res) {
+router.patch('/:id', authorise, function (req, res) {
     Project.findById(req.params.id, function (err, project) {
         if (err) {
             return handleError(res, { error: 'Error fetching project: ' + err });
@@ -103,7 +94,7 @@ router.patch('/:id', ensureAuthenticated, function (req, res) {
 });
 
 // Delete a project
-router.delete('/:id', ensureAuthenticated, function (req, res) {
+router.delete('/:id', authorise, function (req, res) {
     Project.findById(req.params.id, function (err, project) {
         if (err) {
             return handleError(res, { error: 'Error fetching project: ' + err });

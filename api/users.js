@@ -2,24 +2,15 @@ var express = require('express');
 var _ = require('lodash');
 var router = express.Router();
 var User = require('../models/user');
+var authorise = require('../auth/authorise');
 
 // handle errors
 function handleError(res, err) {
   return res.status(500).json(err);
 }
 
-// simple middleware for authenticated routes
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-      return next();
-  }
-
-  // denied, redirect to login
-  return res.status(403).json({ message: "Unauthorised action" });
-}
-
 // Get a list of users
-router.get('/', function (req, res) {
+router.get('/', authorise, function (req, res) {
   console.log("authenticated as user: ");
   User.find({}, function (err, users) {
     if (err) {
@@ -47,7 +38,7 @@ router.get('/:id([a-z0-9_.-]+)', function (req, res) {
 });
 
 // Create a new user
-router.post('/', ensureAuthenticated, function (req, res) {
+router.post('/', authorise, function (req, res) {
   User.create(req.body, function (err, user) {
     if (err) {
       return handleError(res, { error: 'Error creating user: ' + err });
@@ -58,7 +49,7 @@ router.post('/', ensureAuthenticated, function (req, res) {
 });
 
 // Update an existing user
-router.patch('/:id', ensureAuthenticated, function (req, res) {
+router.patch('/:id', authorise, function (req, res) {
   User.findById(req.params.id, function (err, user) {
     if (err) {
       return handleError(res, { error: 'Error fetching user: ' + err });
@@ -81,7 +72,7 @@ router.patch('/:id', ensureAuthenticated, function (req, res) {
 });
 
 // Partially update an existing user
-router.patch('/:id', ensureAuthenticated, function (req, res) {
+router.patch('/:id', authorise, function (req, res) {
   User.findById(req.params.id, function (err, user) {
     if (err) {
       return handleError(res, { error: 'Error fetching user: ' + err });
@@ -105,7 +96,7 @@ router.patch('/:id', ensureAuthenticated, function (req, res) {
 });
 
 // Delete a user
-router.delete('/:id', ensureAuthenticated, function (req, res) {
+router.delete('/:id', authorise, function (req, res) {
   User.findById(req.params.id, function (err, user) {
     if (err) {
       return handleError(res, { error: 'Error fetching user: ' + err });
@@ -164,7 +155,7 @@ router.get('/:id/interests/:interest_id', function (req, res) {
 });
 
 // Create a new interest
-router.post('/:id/interests', ensureAuthenticated, function (req, res) {
+router.post('/:id/interests', authorise, function (req, res) {
   User.findById(req.params.id, function (err, user) {
     if (err) {
       return handleError(res, { error: 'Error fetching user: ' + err });
@@ -191,7 +182,7 @@ router.post('/:id/interests', ensureAuthenticated, function (req, res) {
 });
 
 // Update an interest
-router.put('/:id/interests/:interest_id', ensureAuthenticated, function (req, res) {
+router.put('/:id/interests/:interest_id', authorise, function (req, res) {
   User.findById(req.params.id, function (err, user) {
     if (err) {
       return handleError(res, { error: 'Error fetching user: ' + err });
@@ -214,7 +205,7 @@ router.put('/:id/interests/:interest_id', ensureAuthenticated, function (req, re
 });
 
 // Delete an interest
-router.delete('/:id/interests/:interest_id', ensureAuthenticated,  function (req, res) {
+router.delete('/:id/interests/:interest_id', authorise,  function (req, res) {
   User.findById(req.params.id, function (err, user) {
     if (err) {
       return handleError(res, { error: 'Error fetching user: ' + err });
