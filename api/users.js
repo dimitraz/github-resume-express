@@ -9,6 +9,7 @@ function handleError(res, err) {
 
 // Get a list of users
 router.get('/', function (req, res) {
+  console.log("authenticated as user: ");
   User.find({}, function (err, users) {
     if (err) {
       return handleError(res, { error: 'Error fetching users: ' + err });
@@ -18,7 +19,7 @@ router.get('/', function (req, res) {
 });
 
 // Get a user by ID
-router.get('/:id', function (req, res) {
+router.get('/:id([a-z0-9_.-]+)', function (req, res) {
   User.findOne({
     _id: req.params.id
   }, function (err, user) {
