@@ -8,8 +8,10 @@ function handleError(res, err) {
     return res.status(500).json(err);
 }
 
+var baseUrl = '/users/:id';
+
 // Get a list of projects
-router.get('/', function (req, res) {
+router.get(baseUrl + '/projects', function (req, res) {
     Project.find({}, function (err, projects) {
         if (err) {
             return handleError(res, { error: 'Error fetching projects: ' + err });
@@ -19,9 +21,9 @@ router.get('/', function (req, res) {
 });
 
 // Get a project by ID
-router.get('/:id', function (req, res) {
+router.get(baseUrl + '/projects/:project_id', function (req, res) {
     Project.findOne({
-        _id: req.params.id
+        _id: req.params.project_id
     }, function (err, project) {
         if (err) {
             return handleError(res, { error: 'Error fetching project: ' + err });
@@ -36,8 +38,17 @@ router.get('/:id', function (req, res) {
 });
 
 // Create a new project
-router.post('/', authorise, function (req, res) {
-    Project.create(req.body, function (err, project) {
+router.post(baseUrl + '/projects', authorise, function (req, res) {
+    var project = new Project({
+        name: req.body.name,
+        userId: req.params.id,
+        description: req.body.description || '',
+        language: req.body.language || '',
+        html_url: req.body.html_url || '',
+        ext_url: req.body.ext_url || ''
+    });
+
+    project.save(function (err, project) {
         if (err) {
             return handleError(res, { error: 'Error creating project: ' + err });
         }
@@ -47,42 +58,21 @@ router.post('/', authorise, function (req, res) {
 });
 
 // Update an existing project
-router.patch('/:id', authorise, function (req, res) {
-    Project.findById(req.params.id, function (err, project) {
+router.put(baseUrl + '/projects/:project_id', authorise, function (req, res) {
+    Project.findById(req.params.project_id, function (err, project) {
         if (err) {
             return handleError(res, { error: 'Error fetching project: ' + err });
         }
-
+        
         if (!project) {
             return res.status(404).json({ error: 'Project not found' })
         }
 
-        project.name = req.body.name;
-        project.login = req.body.login;
-
-        project.save(function (err) {
-            if (err) {
-                return handleError(res, { error: 'Error updating project: ' + err });
-            }
-            return res.status(200).json(project);
-        });
-    });
-});
-
-// Partially update an existing project
-router.patch('/:id', authorise, function (req, res) {
-    Project.findById(req.params.id, function (err, project) {
-        if (err) {
-            return handleError(res, { error: 'Error fetching project: ' + err });
-        }
-
-        if (!project) {
-            return res.status(404).json({ error: 'Project not found' })
-        }
-
-        if (req.body.name) { project.name = req.body.name }
-        if (req.body.address) { project.address = req.body.address }
-        // project.phone_number = req.body.phone_number
+        project.name = req.body.name || project.name;
+        project.description = req.body.description || project.description;
+        project.language = req.body.language || project.language;
+        project.html_url = req.body.html_url || project.html_url;
+        project.ext_url = req.body.ext_url || project.ext_url;
 
         project.save(function (err) {
             if (err) {
@@ -94,8 +84,8 @@ router.patch('/:id', authorise, function (req, res) {
 });
 
 // Delete a project
-router.delete('/:id', authorise, function (req, res) {
-    Project.findById(req.params.id, function (err, project) {
+router.delete(baseUrl + '/projects/:project_id', authorise, function (req, res) {
+    Project.findById(req.params.project_id, function (err, project) {
         if (err) {
             return handleError(res, { error: 'Error fetching project: ' + err });
         }

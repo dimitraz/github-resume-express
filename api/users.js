@@ -10,8 +10,7 @@ function handleError(res, err) {
 }
 
 // Get a list of users
-router.get('/', authorise, function (req, res) {
-  console.log("authenticated as user: ");
+router.get('/', function (req, res) {
   User.find({}, function (err, users) {
     if (err) {
       return handleError(res, { error: 'Error fetching users: ' + err });
@@ -49,7 +48,7 @@ router.post('/', authorise, function (req, res) {
 });
 
 // Update an existing user
-router.patch('/:id', authorise, function (req, res) {
+router.put('/:id', authorise, function (req, res) {
   User.findById(req.params.id, function (err, user) {
     if (err) {
       return handleError(res, { error: 'Error fetching user: ' + err });
@@ -60,33 +59,14 @@ router.patch('/:id', authorise, function (req, res) {
     }
 
     user.name = req.body.name;
-    user.login = req.body.login;
+    user.bio = req.body.bio || user.bio;
+    user.location = req.body.location || user.location;
+    user.blog = req.body.blog || user.blog;
+    user.email = req.body.email || user.email;
+    user.company = req.body.company || user.company;
+    user.avatar_url = req.body.avatar_url || user.avatar_url;
 
-    user.save(function (err) {
-      if (err) {
-        return handleError(res, { error: 'Error updating user: ' + err });
-      }
-      return res.status(200).json(user);
-    });
-  });
-});
-
-// Partially update an existing user
-router.patch('/:id', authorise, function (req, res) {
-  User.findById(req.params.id, function (err, user) {
-    if (err) {
-      return handleError(res, { error: 'Error fetching user: ' + err });
-    }
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' })
-    }
-
-    if (req.body.name) { user.name = req.body.name }
-    if (req.body.address) { user.address = req.body.address }
-    // user.phone_number = req.body.phone_number
-
-    user.save(function (err) {
+    user.save(function (err, user) {
       if (err) {
         return handleError(res, { error: 'Error updating user: ' + err });
       }
