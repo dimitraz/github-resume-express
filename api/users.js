@@ -191,13 +191,13 @@ router.delete('/:id/interests/:interest_id', authorise,  function (req, res) {
       return handleError(res, { error: 'Error fetching user: ' + err });
     }
 
-    // get the interest and update
-    var interests = _.remove(user.interests, function (interest) {
-      return interest._id == req.params.interest_id;
+    var item = _.remove(user.interests, (i) => {
+      return i._id == req.params.interest_id;
     });
-    if (interests > 0) {
+
+    if (item.length > 0) {
       user.save(function (err) {
-        if (err) { return handleError(res, { error: 'Error saving user: ' + err }); }
+        if (err) { return handleError(res, { error: 'Unable to delete interest: ' + err }); }
         return res.status(200).json(user.interests);
       });
     }

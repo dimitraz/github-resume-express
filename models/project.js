@@ -19,7 +19,7 @@ var ProjectSchema = new Schema({
     language: {
         type: String,
         set: deleteEmpty,
-        validate: validators.isAlphanumeric()
+        validate: validators.isAscii({ message: 'Please enter a valid language' })
     },
     html_url: {
         type: String,

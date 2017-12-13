@@ -8,7 +8,7 @@ var User = require('../models/user');
 // auth
 router.get('/login', passport.authenticate('github', { session: false }), function (err, user) {
     if (err) return res.status(400).json({ err: "err" });
-    return res.status(200);
+    return res.status(200).end();
 });
 
 router.get('/logout', function (req, res) {
@@ -33,6 +33,7 @@ router.get('/callback', passport.authenticate('github', { failureRedirect: '/' }
     }
 );
 
+// get logged in user
 router.get('/return', function (req, res) {
     var token = req.headers.authorization.split(' ')[1];
 
@@ -46,7 +47,7 @@ router.get('/return', function (req, res) {
                 return res.status(401).end();
             }
 
-            return res.status(200).json({ token: token, user: user });
+            return res.status(200).json({ user: user });
         });
     });
 });

@@ -17,52 +17,42 @@ var auth = require('./auth/index');
 var User = require('./models/user');
 
 var app = express();
-app.use(cors())
 
 // db connection
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/github-resume');
 
-// Express and Passport Session
-app.use(session({ secret: process.env.SESSION_SECRET }));
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser(function (user, done) {
-  console.log(user);
-  done(null, user._id);
-});
-
-passport.deserializeUser(function (id, done) {
-  User.findById(id, function (err, user) {
-    console.log(user);
-    if (!err) done(null, user);
-    else done(err, null);
-  });
-});
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.all('/', function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
+// Express and Passport Session
+// app.use(session({ secret: process.env.SESSION_SECRET }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function (user, done) {
+  done(null, user._id);
 });
 
-app.use('/', index);
+passport.deserializeUser(function (id, done) {
+  User.findById(id, function (err, user) {
+    if (!err) done(null, user);
+    else done(err, null);
+  });
+});
+
+// view engine setup
+//app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
+
+
+//app.use('/', index);
 app.use('/api/users', users);
-app.use('/api/projects', projects);
+app.use('/api/', projects);
 app.use('/auth', auth);
 
 // catch 404 and forward to error handler
