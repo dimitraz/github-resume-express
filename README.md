@@ -35,6 +35,14 @@ A complete list of dependencies for each can be found in the respective `package
 ## Server-side
 ### API 
 
+**authentication**
+
+Route | Description
+--- | ---
+GET /auth/login | authenticate with github
+GET /auth/logout | log out
+GET /auth/return | return logged in user
+
 **users**
 
 Route | Description
@@ -53,10 +61,10 @@ String queries are also supported. A few examples:
 
 Route | Description
 --- | ---
-GET /users/:user_id/projects | get projects for user
-GET /users/:user_id/projects/:id | get specific project for user
-POST /users/:user_id/projects | create a new project
-PUT /users/:user_id/projects/:id | update a project
+GET /api/users/:user_id/projects | get projects for user
+GET /api/users/:user_id/projects/:id | get specific project for user
+POST /api/users/:user_id/projects | create a new project
+PUT /api/users/:user_id/projects/:id | update a project
 DELETE /users/:user_id/projects/:id | delete a project
 
 String queries are also supported. A few examples:
@@ -67,12 +75,11 @@ String queries are also supported. A few examples:
 
 Route | Description
 --- | ---
-GET /users/:user_id/interests | get interests for user
-GET /users/:user_id/interests/:id | get specific interest for user
-POST /users/:user_id/interests | create a new interest
-PUT /users/:user_id/interests/:id | update an interest
-DELETE /users/:user_id/interests/:id | delete an interest
-
+GET /api/users/:user_id/interests | get interests for user
+GET /api/users/:user_id/interests/:id | get specific interest for user
+POST /api/users/:user_id/interests | create a new interest
+PUT /api/users/:user_id/interests/:id | update an interest
+DELETE /api/users/:user_id/interests/:id | delete an interest
 
 ### Data Model Design
 
