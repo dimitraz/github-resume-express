@@ -1,0 +1,18 @@
+<h1>All users</h1>
+<br>
+
+<div class="card-columns">
+    <div *ngFor="let user of users">
+        <div class="card" style="width: 20rem;">
+            <img class="card-img-top" src="{{ user.avatar_url }}" width="100%" alt="">
+            <div class="card-block">
+                <h4 class="card-title">{{ user.login }}</h4>
+                <p>
+                    <span class="octicon octicon-pin" aria-hidden="true"></span>
+                    {{ user.location }}
+                </p>
+                <p class="card-text">{{ user.bio }}</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <img src="{{ user.avatar_url }}" class="img-thumbnail rounded-circle">
+            <br>
+            <br>
+
+            <h2 style="font-weight: bold">{{ user.name }}</h2>
+            <div *ngIf="user.location">
+                <span class="octicon octicon-location"></span> {{ user.location }}
+                <br>
+            </div>
+            <div *ngIf="user.blog">
+                <span class="octicon octicon-link"></span>
+                <a href="{{ user.blog }}">Website</a>
+                <br>
+            </div>
+            <div *ngIf="user.company">
+                <span class="octicon octicon-organization"></span>{{ user.company }}
+                <br>
+            </div>
+            <div *ngIf="user.email">
+                <span class="octicon octicon-mail"></span>{{ user.email }}
+                <br>
+            </div>
+
+            <br>
+            <p>{{ user.bio }}</p>
+
+            <h5>Interests</h5>
+            <div *ngFor="let interest of interests">
+                <li> {{ interest.interest }}</li>
+            </div>
+            <br>
+            <button type="button" href="#" routerLink="/profile/{{ user._id }}/interests" class="btn btn-primary btn-sm">
+                <span class="octicon octicon-pencil"></span>
+                Edit interests
+            </button>
+        </div>
+        <div class="col-6">
+            <div style="border: 2px solid #eee; padding: 1.5em; margin-bottom: 2em">
+                <h2 style="font-weight: bold">Skills</h2>
+                <div *ngFor="let skill of skills">
+                    <li style="display: inline">
+                        <div [ngStyle]="{background: findColour(skill).colour}" style="
+                            -webkit-border-radius: 8px;
+                            moz-border-radius: 8px;
+                            border-radius: 8px;
+                            width: 8px;
+                            height: 8px;
+                            display: inline-block;
+                            margin-right: 5px;">
+                        </div>
+                        {{ skill }}</li>
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 2em;">
+                <div class="col">
+                    <h2 style="font-weight: bold">Projects</h2>
+                </div>
+                <div class="col" style="text-align: right">
+                    <button type="button" class="btn btn-success">
+                        <span class="octicon octicon-plus"></span>
+                        Add new
+                    </button>
+                </div>
+            </div>
+
+            <div *ngFor="let project of projects">
+                <h3 style="font-weight: bold">{{ project.name }}</h3>
+
+                <small *ngIf="project.html_url">
+                    <span class="octicon octicon-mark-github"></span>
+                    <a href="{{ project.html_url }}">View on Github</a> &middot;
+
+                </small>
+                <small *ngIf="project.html_url">
+                    <span class="octicon octicon-link"></span>
+                    <a href="{{ project.ext_url }}">Project link</a>
+                </small>
+
+                <p style="padding-top: 5px">{{ project.description }}</p>
+                <a class="btn btn-secondary" href="#" routerLink="/profile/{{ user._id }}/projects/{{ project._id }}">Edit</a>
+                <a class="btn btn-danger" (click)="deleteProject(project._id)" href="#" routerLink="/profile">Delete</a>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>

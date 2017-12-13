@@ -1,0 +1,28 @@
+<div>
+  <a href="/profile">&larr; Back to profile</a>
+  <br>
+  <br>
+</div>
+
+<div *ngFor="let interest of interests">
+  <form #f="ngForm" (ngSubmit)="onSubmit(interest._id)" class="form-inline">
+    <div class="form-group">
+      <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" name="int" id="int" [(ngModel)]="interest.interest" required
+        ngModel>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2 mr-sm-2 mb-sm-0">Submit</button>
+    <a class="btn btn-danger mb-2 mr-sm-2 mb-sm-0" (click)="deleteInterest(interest._id)">Delete</a>
+  </form>
+  <br>
+</div>
+
+<div>
+  <form #add="ngForm" (ngSubmit)="onSubmitAdd()" class="form-inline">
+    <div class="form-group">
+      <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" name="int" id="int" [(ngModel)]="newInterest" required
+        ngModel>
+    </div>
+    <button type="submit" class="btn btn-success mb-2 mr-sm-2 mb-sm-0">Add</button>
+  </form>
+  <br>
+</div>
