@@ -11,11 +11,10 @@ var ev = require('express-validation');
 require('dotenv').config()
 require('./auth/config')(passport)
 
-var index = require('./api/index');
+var User = require('./models/user');
 var users = require('./api/users');
 var projects = require('./api/projects');
 var auth = require('./auth/index');
-var User = require('./models/user');
 
 var app = express();
 
@@ -68,6 +67,7 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  // query validation
   if (err instanceof ev.ValidationError) {
     return res.status(err.status).json(err);
   }
