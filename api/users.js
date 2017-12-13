@@ -3,15 +3,17 @@ var _ = require('lodash');
 var router = express.Router();
 var User = require('../models/user');
 var authorise = require('../auth/authorise');
+var validate = require('express-validation');
+var validation = require('../models/validation/user.js');
 
 // handle errors
 function handleError(res, err) {
   return res.status(500).json(err);
 }
 
-// Get a list of users
-router.get('/', function (req, res) {
-  User.find({}, function (err, users) {
+// Get a list of users & query
+router.get('/', validate(validation), function (req, res) {
+  User.find(req.query, function (err, users) {
     if (err) {
       return handleError(res, { error: 'Error fetching users: ' + err });
     }

@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var Project = require('../models/project');
 var authorise = require('../auth/authorise');
+var validate = require('express-validation');
+var validation = require('../models/validation/project.js');
 
 // handle errors
 function handleError(res, err) {
@@ -9,6 +11,16 @@ function handleError(res, err) {
 }
 
 var baseUrl = '/users/:id';
+
+// Query projects
+router.get('/projects', validate(validation), function (req, res) {
+    Project.find(req.query, function (err, projects) {
+        if (err) {
+            return handleError(res, { error: 'Error fetching projects: ' + err });
+        }
+        return res.json(projects);
+    });
+});
 
 // Get a list of projects
 router.get(baseUrl + '/projects', function (req, res) {

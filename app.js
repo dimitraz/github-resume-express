@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var passport = require('passport');
 var cors = require('cors')
+var ev = require('express-validation');
 require('dotenv').config()
 require('./auth/config')(passport)
 
@@ -68,9 +69,13 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  if (err instanceof ev.ValidationError) {
+    return res.status(err.status).json(err);
+  }
+  
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render();
 });
 
 module.exports = app;
