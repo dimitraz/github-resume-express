@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var passport = require('passport');
-var cors = require('cors')
+//var cors = require('cors')
 var ev = require('express-validation');
 require('dotenv').config()
 require('./auth/config')(passport)
@@ -20,7 +20,7 @@ var app = express();
 
 // db connection
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/github-resume');
+mongoose.connect(process.env.MONGO_CONNECT);
 
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
